@@ -3,15 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEMESTER 2 Calendar</title>
+    <title>Varis Premium BCA Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f5f7; color: #1a1a1a; padding: 15px; margin: 0; }
-        .container { max-width: 450px; margin: 0 auto; }
-        .card { background: #ffffff; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: center; }
-        h2 { color: #111a2c; font-size: 20px; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-weight: 800; }
+        /* Animated Liquid Gradient Background */
+        body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; color: #fff; min-height: 100vh; background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: gradientBG 15s ease infinite; overflow-x: hidden; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        /* Attendance Visuals */
-        .progress-circle { position: relative; width: 110px; height: 110px; border-radius: 50%; background: conic-gradient(#22c55e 84.2%, #e5e7eb 0); margin: 15px auto; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 450px; margin: 0 auto; }
+        
+        /* Glassmorphism Core CSS */
+        .glass-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: center; }
+        h2 { font-size: 20px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; margin-top: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+
+        /* 3D Holographic Cube */
+        .scene { width: 80px; height: 80px; perspective: 400px; margin: 20px auto; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: spinCube 8s infinite linear; }
+        .cube__face { position: absolute; width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.5); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; backdrop-filter: blur(5px); }
+        .cube__face--front  { transform: rotateY(  0deg) translateZ(40px); }
+        .cube__face--right  { transform: rotateY( 90deg) translateZ(40px); }
+        .cube__face--back   { transform: rotateY(180deg) translateZ(40px); }
+        .cube__face--left   { transform: rotateY(-90deg) translateZ(40px); }
+        .cube__face--top    { transform: rotateX( 90deg) translateZ(40px); }
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(40px); }
+        @keyframes spinCube { 0% { transform: translateZ(-40px) rotateX(0deg) rotateY(0deg); } 100% { transform: translateZ(-40px) rotateX(360deg) rotateY(360deg); } }
+
+        /* 3D Flip ID Card */
+        .flip-card { background-color: transparent; width: 100%; height: 180px; perspective: 1000px; margin-bottom: 20px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
+        .flip-card:active .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+        .flip-card-front { background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); }
+        .flip-card-back { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); transform: rotateY(180deg); border: 1px solid rgba(255,255,255,0.2); }
+        .id-title { font-size: 22px; font-weight: bold; margin: 5px 0; }
+        .id-subtitle { font-size: 14px; opacity: 0.9; }
+
+        /* Animated XP Attendance Circle */
+        .xp-container { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; }
+        .xp-circle { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .xp-bg { fill: none; stroke: rgba(255,255,255,0.2); stroke-width: 10; }
+        .xp-progress { fill: none; stroke: #4ade80; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 314; stroke-dashoffset: 314; animation: fillXP 2s ease-out forwards; }
+        @keyframes fillXP { to { stroke-dashoffset: 49.6; } } /* 84.2% of 314 */
+        .xp-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 22px; font-weight: bold; }
+        
+        /* Bunk Meter */
+        .bunk-meter { background: rgba(0, 255, 100, 0.2); border-left: 5px solid #4ade80; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; }
+
+        /* Interactive Task Board */
+        .task-list { text-align: left; padding: 0; list-style: none; margin: 0; }
+        .task-item { background: rgba(255, 255, 255, 0.1); padding: 12px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .task-item:active { background: rgba(255, 255, 255, 0.3); }
+        .task-item.done { text-decoration: line-through; opacity: 0.5; background: rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="scene">
+        <div class="cube">
+            <div class="cube__face cube__face--front">Day 4</div>
+            <div class="cube__face cube__face--back">🧥</div>
+            <div class="cube__face cube__face--right">BCA</div>
+            <div class="cube__face cube__face--left">Day 4</div>
+            <div class="cube__face cube__face--top">🧥</div>
+            <div class="cube__face cube__face--bottom">BCA</div>
+        </div>
+    </div>
+
+    <div class="flip-card">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <div class="id-subtitle">Nilgiri College</div>
+                <div class="id-title">Abdul Varis</div>
+                <div class="id-subtitle">BCA - 1st Year</div>
+                <div style="font-size: 10px; margin-top: 15px; opacity: 0.7;">Tap to flip</div>
+            </div>
+            <div class="flip-card-back">
+                <div class="id-title">Student Details</div>
+                <div class="id-subtitle">Semester: 2</div>
+                <div class="id-subtitle">Blood Group: O+</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h2>🎮 Player XP & Attendance</h2>
+        
+        <div class="xp-container">
+            <svg class="xp-circle" viewBox="0 0 120 120">
+                <circle class="xp-bg" cx="60" cy="60" r="50"></circle>
+                <circle class="xp-progress" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="xp-text">84%</div>
+        </div>
+        
+        <div style="font-size: 14px; font-weight: bold;">Level 1 BCA Developer</div>
+        
+        <div class="bunk-meter">
+            🛡️ Safe Zone: You can bunk 7 more classes and stay above 75%.
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h2>📝 Live Task Board</h2>
+        <ul class="task-list" id="taskList">
+            <li class="task-item" onclick="this.classList.toggle('done')"><span>1. Print Lab Records</span> <span>🔄</span></li>
+            <li class="task-item" onclick="this.classList.toggle('done')"><span>2. Prepare Seminar PPT</span> <span>🔄</span></li>
+            <li class="task-item" onclick="this.classList.toggle('done')"><span>3. Study for Practical Exam</span> <span>🔄</span></li>
+        </ul>
+        <p style="font-size: 11px; opacity: 0.8; margin-top: 10px;">Tap a task to mark it as completed.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
         .progress-inner { width: 80px; height: 80px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #111a2c; }
         
         /* Calendar Controls */
