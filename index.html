@@ -3,208 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEM 2 CALENDER</title>
+    <title>Varis Pro Timetable Calendar</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f5f7; color: #1a1a1a; padding: 15px; margin: 0; }
-        .container { max-width: 450px; margin: 0 auto; }
-        .card { background: #ffffff; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: center; }
-        h2 { color: #111a2c; font-size: 20px; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-weight: 800; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         
-        /* Attendance Visuals */
-        .progress-circle { position: relative; width: 110px; height: 110px; border-radius: 50%; background: conic-gradient(#22c55e 84.2%, #e5e7eb 0); margin: 15px auto; display: flex; align-items: center; justify-content: center; }
-        .progress-inner { width: 80px; height: 80px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #111a2c; }
+        /* 🌈 Vibrant iOS Mesh Gradient Background */
+        body { 
+            margin: 0; 
+            padding: 20px; 
+            font-family: 'Inter', sans-serif; 
+            color: #fff; 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #4facfe 0%, #8e2de2 50%, #f5576c 100%);
+            background-size: 200% 200%;
+            animation: gradientBG 12s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        /* Calendar Controls */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .nav-btn { background: #eff6ff; border: 1px solid #bfdbfe; font-size: 18px; color: #3b82f6; cursor: pointer; font-weight: bold; padding: 8px 15px; border-radius: 8px; }
-        .month-title { font-size: 18px; font-weight: bold; color: #111a2c; }
+        .container { width: 100%; max-width: 460px; }
+
+        /* 🧊 Heavy Frosted iOS Glass */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(35px); 
+            -webkit-backdrop-filter: blur(35px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border-radius: 35px; 
+            padding: 25px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
+            box-sizing: border-box;
+            touch-action: pan-y;
+        }
+
+        /* 📅 Clean Calendar Navigation */
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 10px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s; backdrop-filter: blur(10px); font-size: 16px; font-weight: bold; }
+        .nav-btn:active { background: rgba(255,255,255,0.4); transform: scale(0.95); }
         
-        /* Grid Layout */
-        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); font-weight: bold; color: #64748b; font-size: 13px; margin-bottom: 10px; }
-        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; font-size: 14px; }
+        #month-name { font-weight: 700; font-size: 22px; letter-spacing: 0.5px; text-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* 🗓️ The Precision Grid */
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; width: 100%; }
+        .weekdays { font-weight: 700; font-size: 13px; color: rgba(255,255,255,0.95); margin-bottom: 10px; }
         
-        /* Interactive Cells */
-        .date-cell { min-height: 65px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 5px; border-radius: 8px; cursor: pointer; background: #fafafa; border: 1px solid #e2e8f0; position: relative; }
-        .date-num { font-weight: bold; font-size: 15px; color: #0f172a; }
-        .today { border: 2px solid #3b82f6; background: #eff6ff; }
+        /* 📱 Strict Uniform Cells */
+        .day-cell { 
+            aspect-ratio: 3 / 4; 
+            width: 100%;
+            border-radius: 16px; 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.15); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding-top: 8px;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.05);
+            position: relative; 
+            overflow: hidden; 
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .day-cell:active { transform: scale(0.92); }
         
-        /* Dynamic Indicators */
-        .day-order-badge { font-size: 11px; font-weight: bold; color: #3b82f6; margin-top: 2px; }
-        .holiday-badge { font-size: 10px; color: #ef4444; font-weight: bold; margin-top: 2px; text-align: center; line-height: 1.1; }
-        .coat-emoji { font-size: 13px; position: absolute; bottom: 2px; right: 4px; }
-        .empty { background: transparent; border: none; cursor: default; }
+        .date-num { font-size: 15px; font-weight: 700; }
+        .empty { background: transparent; border: 1px solid transparent; box-shadow: none; cursor: default; }
+        .empty:active { transform: none; }
+        
+        /* ✨ Status Highlights & Strict Colors */
+        .today { border: 2px solid #fff; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        .holiday { color: #ff4d4d !important; background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.3); }
+        .holiday-text { font-size: 8.5px; color: #ff4d4d; font-weight: 900; margin-top: auto; padding-bottom: 6px; text-transform: uppercase; line-height: 1.1; }
+        
+        .day-order { 
+            font-size: 10px; 
+            color: #4facfe; 
+            font-weight: 900; 
+            margin-top: auto; 
+            padding-bottom: 6px; 
+            line-height: 1.1; 
+            text-transform: uppercase; 
+            text-align: center;
+        }
+        
+        .coat { position: absolute; bottom: 4px; right: 4px; font-size: 11px; }
+
+        /* 🔔 Custom Toast Alert */
+        #toast { visibility: hidden; min-width: 250px; background-color: rgba(0,0,0,0.8); color: #fff; text-align: center; border-radius: 20px; padding: 16px; position: fixed; z-index: 1000; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; font-size: 14px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+        @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+
+        /* 📋 Frosted Timetable Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.3s ease; z-index: 100;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { 
+            width: 90%; max-width: 380px; 
+            transform: translateY(30px) scale(0.95); 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            padding: 25px; 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(40px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; }
+        .modal-header h2 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0.5px;}
+        .close-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 16px; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;}
+        
+        .timetable-list { display: flex; flex-direction: column; gap: 10px; }
+        .time-slot { background: rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 20px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: inset 0 2px 5px rgba(255,255,255,0.05); }
+        .slot-num { font-weight: 900; margin-right: 15px; color: #4facfe; font-size: 16px; background: rgba(255,255,255,0.15); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);}
+        .slot-details { display: flex; flex-direction: column; text-align: left; }
+        .slot-subject { font-weight: 700; font-size: 15px; color: #fff; letter-spacing: 0.3px;}
+        .slot-teacher { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; font-weight: 600;}
     </style>
 </head>
 <body>
 
 <div class="container">
-
-    <div class="card">
-        <h2>📊 Semester 2 Attendance</h2>
-        <div class="progress-circle">
-            <div class="progress-inner">84.2%</div>
+    <div class="glass-card" id="swipe-zone">
+        <div class="cal-nav">
+            <button class="nav-btn" onclick="changeMonth(-1)">❮</button>
+            <div id="month-name">March 2026</div>
+            <button class="nav-btn" onclick="changeMonth(1)">❯</button>
         </div>
-        <p style="font-size: 13px; color: #64748b; font-weight: bold;">01-12-2025 To 31-05-2026</p>
+        
+        <div class="days-grid weekdays">
+            <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+        </div>
+        
+        <div class="days-grid" id="calendar"></div>
     </div>
+</div>
 
-    <div class="card">
-        <div class="calendar-header">
-            <button class="nav-btn" onclick="changeMonth(-1)">&#10094; Prev</button>
-            <div class="month-title" id="month-display">March 2026</div>
-            <button class="nav-btn" onclick="changeMonth(1)">Next &#10095;</button>
+<div id="toast">Message goes here</div>
+
+<div id="timetable-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">Day Order</h2>
+            <button class="close-btn" onclick="closeModal()">✕</button>
         </div>
-        
-        <div class="weekdays">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-        </div>
-        
-        <div class="days-grid" id="calendar-grid">
+        <div id="modal-body" class="timetable-list">
             </div>
     </div>
-
 </div>
 
 <script>
-    const grid = document.getElementById('calendar-grid');
-    const monthDisplay = document.getElementById('month-display');
     const today = new Date();
+    let currentMonth = today.getMonth(); 
+    let currentYear = today.getFullYear();
     
-    let currentMonth = 2; // Default to March (Index 2)
-    let currentYear = 2026;
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    if(currentYear === 2026 && currentMonth > 4) currentMonth = 4;
+    if(currentYear < 2025 || (currentYear === 2025 && currentMonth < 11)) { currentYear = 2025; currentMonth = 11; }
 
-    // Explicit Holiday Display List
-    const collegeHolidays = {
-        "2025-12-24": "Holiday", "2025-12-25": "Christmas", "2025-12-26": "Spl Leave", "2025-12-27": "Spl Leave",
-        "2026-1-1": "New Year", "2026-1-14": "Pongal", "2026-1-26": "Republic Day",
-        "2026-2-4": "Cancer Day", "2026-2-11": "CIA-II", "2026-2-21": "Mother Lang",
-        "2026-3-8": "Women's Day", "2026-3-12": "Practical", "2026-3-19": "Spl Leave", "2026-3-20": "Eid-ul-Fitr", "2026-3-21": "Spl Leave", "2026-3-25": "Model Exam",
-        "2026-4-3": "Good Friday", "2026-4-5": "Easter", "2026-4-6": "Study Leave", "2026-4-13": "Sem Exam", "2026-4-14": "Tamil NY",
-        "2026-5-1": "Annual Lv"
+    const holidays = {
+        "2025-12-24":"Holiday", "2025-12-25":"Christmas", "2025-12-26":"Spl Leave", "2025-12-27":"Spl Leave",
+        "2026-1-1":"New Year", "2026-1-14":"Pongal", "2026-1-26":"Republic",
+        "2026-2-4":"Cancer Day", "2026-2-11":"CIA-II", "2026-2-21":"Mother Lang",
+        "2026-3-8":"Women's Day", "2026-3-12":"Practical", "2026-3-19":"Spl Leave", "2026-3-20":"Eid", "2026-3-21":"Spl Leave", "2026-3-25":"Model Exam",
+        "2026-4-3":"Good Friday", "2026-4-5":"Easter", "2026-4-6":"Study Leave", "2026-4-13":"Sem Exam", "2026-4-14":"Tamil NY",
+        "2026-5-1":"Annual Lv"
     };
-
-    // Days to pause the Day Order Counter (Weekends & Holidays)
+    
     const skipDays = [
-        // Dec
         "2025-12-7", "2025-12-13", "2025-12-14", "2025-12-21", "2025-12-24", "2025-12-25", "2025-12-26", "2025-12-27", "2025-12-28",
-        // Jan
         "2026-1-1", "2026-1-4", "2026-1-10", "2026-1-11", "2026-1-14", "2026-1-15", "2026-1-16", "2026-1-17", "2026-1-18", "2026-1-25", "2026-1-26",
-        // Feb
         "2026-2-1", "2026-2-8", "2026-2-14", "2026-2-15", "2026-2-22", "2026-2-28",
-        // Mar
         "2026-3-1", "2026-3-8", "2026-3-14", "2026-3-15", "2026-3-19", "2026-3-20", "2026-3-21", "2026-3-22", "2026-3-28", "2026-3-29",
-        // Apr 
         "2026-4-3", "2026-4-4", "2026-4-5", "2026-4-11", "2026-4-12", "2026-4-14", "2026-4-18", "2026-4-19", "2026-4-25", "2026-4-26",
-        // May
         "2026-5-1", "2026-5-2", "2026-5-3", "2026-5-9", "2026-5-10", "2026-5-16", "2026-5-17", "2026-5-23", "2026-5-24", "2026-5-30", "2026-5-31"
     ];
 
-    // The Ultimate Anchor Logic
-    function calculateExactDayOrders() {
-        let dayMap = {};
+    // BCA Timetable Data Database
+    const timetableData = {
+        1: [
+            { s: "🔢 Discrete Maths", t: "Aathira" },
+            { s: "📝 English", t: "" },
+            { s: "🧪 C++ Lab", t: "Renukha" },
+            { s: "🧪 C++ Lab", t: "Renukha" },
+            { s: "💻 C++", t: "Ganga" },
+            { s: "☕ Skill HR", t: "" }
+        ],
+        2: [
+            { s: "💻 C++", t: "Jima" },
+            { s: "🔢 Discrete Maths", t: "Aathira" },
+            { s: "🗣️ Arabic", t: "" },
+            { s: "🖱️ IB", t: "Michael Raj" },
+            { s: "💻 C++", t: "Ganga" },
+            { s: "☕ Physics", t: "" }
+        ],
+        3: [
+            { s: "🖱️ IB", t: "Muthukumar" },
+            { s: "🔢 Discrete Maths", t: "Aathira" },
+            { s: "🧪 C++ Lab", t: "Renukha" },
+            { s: "📝 English", t: "" },
+            { s: "👥 HR", t: "Renukha" },
+            { s: "🧪 IB Lab", t: "Muthukumar" }
+        ],
+        4: [
+            { s: "🧪 C++ Lab", t: "Renukha" },
+            { s: "💻 C++", t: "Jima" },
+            { s: "🗣️ Arabic", t: "" },
+            { s: "🔢 Discrete Maths", t: "SR" },
+            { s: "🔢 Discrete Maths", t: "Aathira" },
+            { s: "☕ Swayam", t: "" }
+        ],
+        5: [
+            { s: "📝 English", t: "" },
+            { s: "💻 C++", t: "Ganga" },
+            { s: "👥 HR", t: "Renukha" },
+            { s: "🗣️ Arabic", t: "" },
+            { s: "🧪 IB Lab", t: "Ganga" },
+            { s: "☕ Forum", t: "" }
+        ]
+    };
+
+    function getDayOrders() {
+        let map = {};
+        let start = new Date(2026, 2, 4); 
         
-        // ANCHOR: March 4, 2026 is permanently Day 4
-        dayMap["2026-3-4"] = 4;
-
-        // Backward calculation to Dec 1
-        let currOrder = 4;
-        let tempDate = new Date(2026, 2, 3); // Mar 3
-        while(tempDate >= new Date(2025, 11, 1)) {
-            let dStr = `${tempDate.getFullYear()}-${tempDate.getMonth()+1}-${tempDate.getDate()}`;
-            if(tempDate.getDay() !== 0 && !skipDays.includes(dStr)) {
-                currOrder = currOrder - 1;
-                if(currOrder < 1) currOrder = 5;
-                dayMap[dStr] = currOrder;
+        let temp = new Date(start);
+        let backOrder = 4;
+        while(temp > new Date(2025, 11, 1)) {
+            temp.setDate(temp.getDate() - 1);
+            let dStr = `${temp.getFullYear()}-${temp.getMonth()+1}-${temp.getDate()}`;
+            if(temp.getDay() !== 0 && !skipDays.includes(dStr)) {
+                backOrder = backOrder === 1 ? 5 : backOrder - 1;
+                map[dStr] = backOrder;
             }
-            tempDate.setDate(tempDate.getDate() - 1);
         }
-
-        // Forward calculation to May 31
-        currOrder = 4;
-        tempDate = new Date(2026, 2, 5); // Mar 5
-        while(tempDate <= new Date(2026, 4, 31)) {
-            let dStr = `${tempDate.getFullYear()}-${tempDate.getMonth()+1}-${tempDate.getDate()}`;
-            if(tempDate.getDay() !== 0 && !skipDays.includes(dStr)) {
-                currOrder = currOrder + 1;
-                if(currOrder > 5) currOrder = 1;
-                dayMap[dStr] = currOrder;
+        
+        temp = new Date(start);
+        let forOrder = 4;
+        map["2026-3-4"] = 4;
+        while(temp < new Date(2026, 4, 31)) {
+            temp.setDate(temp.getDate() + 1);
+            let dStr = `${temp.getFullYear()}-${temp.getMonth()+1}-${temp.getDate()}`;
+            if(temp.getDay() !== 0 && !skipDays.includes(dStr)) {
+                forOrder = forOrder === 5 ? 1 : forOrder + 1;
+                map[dStr] = forOrder;
             }
-            tempDate.setDate(tempDate.getDate() + 1);
         }
-
-        return dayMap;
+        return map;
     }
 
-    const calculatedDayOrders = calculateExactDayOrders();
+    const dayOrderMap = getDayOrders();
 
-    function renderCalendar(month, year) {
+    function showToast(message) {
+        let toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = "show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    function render() {
+        const grid = document.getElementById('calendar');
         grid.innerHTML = "";
-        monthDisplay.innerText = `${monthNames[month]} ${year}`;
         
-        let firstDay = new Date(year, month, 1).getDay();
-        let daysInMonth = new Date(year, month + 1, 0).getDate();
+        const monthOptions = { month: 'long', year: 'numeric' };
+        document.getElementById('month-name').innerText = new Date(currentYear, currentMonth).toLocaleString('en-US', monthOptions).toUpperCase();
         
-        for (let i = 0; i < firstDay; i++) {
-            let emptyDiv = document.createElement('div');
-            emptyDiv.className = 'date-cell empty';
-            grid.appendChild(emptyDiv);
+        let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        
+        for(let i=0; i<firstDay; i++) {
+            grid.innerHTML += `<div class="day-cell empty"></div>`;
         }
-
-        for (let i = 1; i <= daysInMonth; i++) {
-            let cell = document.createElement('div');
-            cell.className = 'date-cell';
+        
+        for(let i=1; i<=daysInMonth; i++) {
+            let dStr = `${currentYear}-${currentMonth+1}-${i}`;
+            let isToday = (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
+            let dayOfWeek = new Date(currentYear, currentMonth, i).getDay();
             
-            let dateString = `${year}-${month + 1}-${i}`;
-            let dayOfWeek = new Date(year, month, i).getDay();
+            let order = dayOrderMap[dStr] || "";
+            let holiday = holidays[dStr] || (dayOfWeek === 0 ? "SUN" : "");
+            if(!holiday && skipDays.includes(dStr) && dayOfWeek !== 0) holiday = "LEAVE";
             
-            if (today.getMonth() === month && today.getFullYear() === year && i === today.getDate()) {
-                cell.classList.add('today');
-            }
-
-            let html = `<div class="date-num">${i}</div>`;
+            let coatHtml = (dayOfWeek === 3 && order && !holiday) ? `<div class="coat">🧥</div>` : ``;
             
-            // Rendering Priorities: Holidays first, then Day Orders
-            if (collegeHolidays[dateString]) {
-                html += `<div class="holiday-badge">${collegeHolidays[dateString]}</div>`;
-                cell.style.borderColor = "#fca5a5"; 
-            } else if (skipDays.includes(dateString) || dayOfWeek === 0) {
-                html += `<div class="holiday-badge">Holiday</div>`;
-                cell.style.borderColor = "#fca5a5";
-            } else if (calculatedDayOrders[dateString]) {
-                html += `<div class="day-order-badge">Day ${calculatedDayOrders[dateString]}</div>`;
-            }
-
-            // Injecting the Coat Emoji securely
-            if (dayOfWeek === 3 && calculatedDayOrders[dateString]) {
-                html += `<div class="coat-emoji">🧥</div>`;
-            }
-
-            cell.innerHTML = html;
+            let contentClass = holiday ? 'holiday-text' : 'day-order';
+            let displayText = holiday ? holiday : (order ? 'D'+order : '');
             
-            cell.onclick = function() {
-                let task = prompt(`Set a reminder for ${monthNames[month]} ${i}:`);
-                if (task) alert(`🔔 Reminder saved: "${task}"`);
-            };
-
-            grid.appendChild(cell);
+            // Added onClick logic to open Timetable Modal
+            grid.innerHTML += `
+                <div class="day-cell ${isToday?'today':''} ${holiday?'holiday':''}" onclick="handleDayClick('${order}', '${holiday}', ${i})">
+                    <div class="date-num">${i}</div>
+                    <div class="${contentClass}">${displayText}</div>
+                    ${coatHtml}
+                </div>`;
+        }
+        
+        let totalCellsUsed = firstDay + daysInMonth;
+        let cellsRemaining = 42 - totalCellsUsed;
+        
+        for(let i=0; i<cellsRemaining; i++) {
+            grid.innerHTML += `<div class="day-cell empty"></div>`;
         }
     }
 
+    // 🛑 Smart Boundary Limits
     function changeMonth(step) {
+        if(step === 1 && currentYear === 2026 && currentMonth === 4) {
+            showToast("🛑 End reached! Semester 2 ends here.");
+            return;
+        }
+        if(step === -1 && currentYear === 2025 && currentMonth === 11) {
+            showToast("🛑 Beginning reached! Semester 2 starts here.");
+            return;
+        }
+
         currentMonth += step;
-        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-        
-        // Strict boundary lock: Dec 2025 to May 2026
-        if (currentYear === 2025 && currentMonth < 11) { currentMonth = 11; }
-        if (currentYear === 2026 && currentMonth > 4) { currentMonth = 4; }
-        
-        renderCalendar(currentMonth, currentYear);
+        if(currentMonth > 11) { currentMonth = 0; currentYear++; }
+        if(currentMonth < 0) { currentMonth = 11; currentYear--; }
+        render();
+    }
+    
+    // 👆 Touch Swipe Logic
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const swipeZone = document.getElementById('swipe-zone');
+
+    swipeZone.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    swipeZone.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) changeMonth(1);
+        if (touchEndX > touchStartX + 50) changeMonth(-1);
     }
 
-    // Initialize display
-    renderCalendar(currentMonth, currentYear);
-</script>
+    // 📋 Timetable Popup Logic
+    function handleDayClick(order, isHoliday, dateNum) {
+        if(isHoliday) {
+            showToast("Enjoy your Holiday! 🎉 No classes today.");
+            return;
+        }
+        
+        if(order && timetableData[order]) {
+            document.getElementById('modal-title').innerText = `Day ${order} Classes`;
+            let html = '';
+            
+            timetableData[order].forEach((slot, index) => {
+                html += `
+                    <div class="time-slot">
+                        <div class="slot-num">${index + 1}</div>
+                        <div class="slot-details">
+                            <span class="slot-subject">${slot.s}</span>
+                            ${slot.t !== '' ? `<span class="slot-teacher">👨‍🏫 Prof. ${slot.t}</span>` : '<span class="slot-teacher">⏳ Self Study / Activity</span>'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('modal-body').innerHTML = html;
+            document.getElementById('timetable-modal').classList.add('active');
+        } else {
+            showToast("Schedule not available for this day.");
+        }
+    }
 
+    function closeModal() {
+        document.getElementById('timetable-modal').classList.remove('active');
+    }
+    
+    render();
+</script>
 </body>
 </html>
